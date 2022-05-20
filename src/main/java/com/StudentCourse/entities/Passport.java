@@ -26,7 +26,7 @@ public class Passport {
     /*@Future*/
     private Date dateOfExpiry;
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
     private Student student;
 
 }

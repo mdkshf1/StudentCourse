@@ -27,6 +27,6 @@ public class Course {
     private Long duration;
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Student> student;
-    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Review> reviews;
 }

@@ -28,8 +28,8 @@ public class Student {
     private String password;
     @ManyToMany(mappedBy = "student",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Course> courses;
-    @OneToOne(mappedBy = "student",fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "student",fetch = FetchType.EAGER,orphanRemoval = true)
     private Passport passport;
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student",orphanRemoval = true)
     private List<Review> review;
 }
