@@ -1,32 +1,49 @@
 package com.StudentCourse.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.StudentCourse.DTO.PassportRequestTO;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
-import javax.validation.constraints.Future;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
+import java.time.LocalDate;
 
-@Entity
-@Slf4j
+
 @Data
-public class Passport {
+@Slf4j
+@Entity
+public class Passport extends AuditingInfo{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Pattern(regexp = "^(?!^0+$)[a-zA-Z0-9]{3,20}$")
+    @Pattern(regexp = "^[A-Z]{1}-[0-9]{7}$")
+    @NotNull(message = "Passport number cannot be null")
+    @NotBlank(message = "Passport number cannot be left blank")
+    @Column(nullable = false,unique = true)
     private String passportNumber;
-    @Temporal(TemporalType.DATE)
-    /*@Past*/
-    private Date dateOfIssue;
-    @Temporal(TemporalType.DATE)
-    /*@Future*/
-    private Date dateOfExpiry;
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL,orphanRemoval = true)
+    @DateTimeFormat(pattern = "dd-mm-yyyy")
+/*    @NotNull(message = "Date of issue cannot be null")
+    @NotBlank(message = "Date of issue cannot be left blank")*/
+    @Column(nullable = false)
+    private LocalDate dateOfIssue;
+    @DateTimeFormat(pattern = "dd-mm-yyyy")
+/*    @NotNull(message = "Date of Expiry cannot be null")
+    @NotBlank(message = "Date of Expiry cannot be left blank")*/
+    @Column(nullable = false)
+    private LocalDate dateOfExpiry;
+    @OneToOne(mappedBy = "passport")
     private Student student;
 
+    public static Passport mapper(PassportRequestTO request, Student student){
+        Passport passport = new Passport();
+        passport.setStudent(student);
+        passport.setPassportNumber(request.getPassportNumber());
+        passport.setDateOfIssue(request.getDateOfIssue());
+        passport.setDateOfExpiry(request.getDateOfExpiry());
+        student.setPassport(passport);
+        return passport;
+    }
 }

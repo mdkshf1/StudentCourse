@@ -1,13 +1,14 @@
 package com.StudentCourse.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode
 public class ReviewPK implements Serializable {
-    private Student student;
-    private Course course;
+    private Long student;
+    private Long course;
 }

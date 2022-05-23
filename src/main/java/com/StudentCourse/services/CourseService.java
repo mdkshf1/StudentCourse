@@ -1,36 +1,93 @@
 package com.StudentCourse.services;
 
-import com.StudentCourse.CustomExceptions.AlreadyFoundException;
 import com.StudentCourse.CustomExceptions.NotFoundException;
-import com.StudentCourse.Repositories.CourseRepo;
+import com.StudentCourse.DTO.CourseRequestTO;
+import com.StudentCourse.DTO.CourseResponseTO;
+import com.StudentCourse.DTO.StudentResponseTO;
+import com.StudentCourse.Repositories.CourseRepository;
 import com.StudentCourse.entities.Course;
+import com.StudentCourse.entities.Student;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@Transactional
 public class CourseService {
+
     @Autowired
-    private CourseRepo courseRepo;
-    public Course addCourse(Course course)
-    {
-        Course courseX=courseRepo.findByName(course.getName());
-        if (courseX != null)
-        {
-            throw new AlreadyFoundException("Course already exist with same name\nenter a unique name");
+    private CourseRepository courseRepository;
+    @Autowired
+    private StudentService studentService;
+
+    public Course checkCourse(Long id){
+        Optional<Course> course = courseRepository.findById(id);
+        if (course.isEmpty()){
+            log.warn("Course found with this id");
+            throw new NotFoundException("Cannot found course with this id");
         }
-        Course course1 = new Course();
-        course1.setName(course.getName());
-        course1.setAmount(course.getAmount());
-        course1.setDescription(course.getDescription());
-        course1.setDuration(course.getDuration());
-        courseRepo.save(course1);
-        return course1;
+        log.info("Got the Course with id "+id);
+        return course.get();
     }
-    public void deleteCourse(String name){
-        Course course = courseRepo.findByName(name);
-        if (course == null){
-            throw new NotFoundException("Course with this name cannot be found");
-        }
-        courseRepo.delete(course);
+
+    public CourseRequestTO addCourse(CourseRequestTO request){
+        Course course = CourseRequestTO.mapper(request);
+        log.info("Ready to save a new  Course");
+        courseRepository.save(course);
+        log.info("New Course Saved");
+        return request;
+    }
+    public List<CourseResponseTO> allCourse(){
+        List<Course> courses = (List<Course>) courseRepository.findAll();
+        log.info("Listing all Courses");
+        return courses.stream().map(CourseResponseTO::mapper).collect(Collectors.toList());
+    }
+    public CourseResponseTO getCourse(Long id){
+        Course course = checkCourse(id);
+        log.info("Showing the course");
+        return CourseResponseTO.mapper(course);
+    }
+    public CourseResponseTO updateCourse(CourseResponseTO response,Long id){
+        Course course = checkCourse(id);
+        log.info("Ready to update the course");
+        if (response.getName() != null)
+            course.setName(response.getName());
+        if (response.getAmount() != null)
+            course.setAmount(response.getAmount());
+        if (response.getDescription() != null)
+            course.setDescription(response.getDescription());
+        if (response.getDuration() != null)
+            course.setDuration(response.getDuration());
+        courseRepository.save(course);
+        log.info("Course updated Successfully");
+        return CourseResponseTO.mapper(course);
+    }
+    public void deleteCourse(Long id){
+        Course course = checkCourse(id);
+        log.info("Ready to delete Course with id "+id);
+        courseRepository.delete(course);
+        log.info("Course deleted with id "+id);
+    }
+    public void subscribeCourse(Long courseId,Long studentId){
+        Student student = studentService.getStudent(studentId);
+        Course course = checkCourse(courseId);
+        List<Student> students = course.getStudents();
+        students.add(student);
+        course.setStudents(students);
+        List<Course> courses = student.getCourses();
+        courses.add(course);
+        student.setCourses(courses);
+        log.info("Course with id "+courseId+" is subscribed by a student with id "+studentId);
+        courseRepository.save(course);
+    }
+    public List<StudentResponseTO> getStudents(Long id){
+        Course course = checkCourse(id);
+        List<Student> students = course.getStudents();
+        return students.stream().map(StudentResponseTO::mapper).collect(Collectors.toList());
     }
 }
