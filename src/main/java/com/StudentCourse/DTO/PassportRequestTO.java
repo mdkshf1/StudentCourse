@@ -12,9 +12,9 @@ import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 @Data
 public class PassportRequestTO {
-    @Pattern(regexp = "^[A-Z]{1}-[0-9]{7}$")
-    @NotNull(message = "Passport number cannot be null")
-    @NotBlank(message = "Passport number cannot be left blank")
+    @Pattern(regexp = "^[A-Z]{1}-[0-9]{7}$",message = "{passport.number.pattern}")
+    @NotNull(message = "{passport.nu,ber.null}")
+    @NotBlank(message = "{passport.number.blank}")
     @Column(nullable = false,unique = true)
     private String passportNumber;
     /*@DateTimeFormat(pattern = "yyyy-MM-dd")*/

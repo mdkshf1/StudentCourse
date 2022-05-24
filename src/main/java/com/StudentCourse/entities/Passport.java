@@ -19,9 +19,9 @@ public class Passport extends AuditingInfo{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Pattern(regexp = "^[A-Z]{1}-[0-9]{7}$")
-    @NotNull(message = "Passport number cannot be null")
-    @NotBlank(message = "Passport number cannot be left blank")
+    @Pattern(regexp = "^[A-Z]{1}-[0-9]{7}$",message = "{passport.number.pattern}")
+    @NotNull(message = "{passport.number.null}")
+    @NotBlank(message = "{passport.number.blank}")
     @Column(nullable = false,unique = true)
     private String passportNumber;
     @DateTimeFormat(pattern = "dd-mm-yyyy")

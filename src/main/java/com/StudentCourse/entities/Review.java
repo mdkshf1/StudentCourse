@@ -19,8 +19,8 @@ public class Review extends AuditingInfo implements Serializable {
     @Id
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private Course course;
-    @Min(value = 0,message = "You cannot give rating below than 0")
-    @Max(value = 5,message = "You cannot give rating more than 5")
+    @Min(value = 0,message = "{rating.minimum}")
+    @Max(value = 5,message = "{rating.maximum}")
     private Integer rating;
     private String comment;
     public static Review mapper(ReviewTO reviewTO, Course course, Student student){

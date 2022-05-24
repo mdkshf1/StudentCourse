@@ -10,8 +10,8 @@ import javax.validation.constraints.Min;
 public class ReviewTO {
     private Long courseId;
     private Long StudentId;
-    @Min(value = 0,message = "You cannot give rating below than 0")
-    @Max(value = 5,message = "You cannot give rating more than 5")
+    @Min(value = 0,message = "{rating.minimum}")
+    @Max(value = 5,message = "{rating.maximum}")
     private Integer rating;
     private String comment;
     public static ReviewTO mapper(Review review){

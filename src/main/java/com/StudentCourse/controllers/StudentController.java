@@ -6,11 +6,16 @@ import com.StudentCourse.DTO.StudentResponseTO;
 import com.StudentCourse.services.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.LocaleContextResolver;
+import org.springframework.web.servlet.LocaleResolver;
+
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +27,9 @@ public class StudentController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @GetMapping("all")
     public ResponseEntity<?> allStudents(){
@@ -86,6 +94,11 @@ public class StudentController {
             log.warn(e.getMessage());
             return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+    }
+    @GetMapping("/i18n")
+    public ResponseEntity<?> i18n(){
+        String str = messageSource.getMessage("good.morning.message",null, LocaleContextHolder.getLocale());
+        return new ResponseEntity<String>(str,HttpStatus.OK);
     }
 }
 

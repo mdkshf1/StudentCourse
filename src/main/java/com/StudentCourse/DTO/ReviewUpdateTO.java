@@ -9,7 +9,7 @@ import javax.validation.constraints.Min;
 @Data
 public class ReviewUpdateTO {
     private String comment;
-    @Min(value = 0,message = "You cannot give rating below than 0")
-    @Max(value = 5,message = "You cannot give rating more than 5")
+    @Min(value = 0,message = "{rating.minimum}")
+    @Max(value = 5,message = "{rating.maximum}")
     private Integer rating;
 }

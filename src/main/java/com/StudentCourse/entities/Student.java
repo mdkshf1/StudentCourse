@@ -14,17 +14,19 @@ public class Student extends AuditingInfo{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 3,message = "Name should be valid ad at least three characters long ")
-    @NotBlank(message = "Name cannot be blank")
-    @NotNull(message = "Name cannot be null")
+    @Size(min = 3,message = "{student.name.size}")
+    @NotBlank(message = "{student.name.blank}")
+    @NotNull(message = "{student.name.null}")
     @Column(nullable = false)
     private String name;
-    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",message = "Email should be in correct format example 'abc@gmail.com'")
-    @NotBlank(message = "Email cannot be blank")
-    @NotNull(message = "Email cannot be null")
+    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",message = "{student.email.format}")
+    @NotBlank(message = "{student.email.blank}")
+    @NotNull(message = "{student.email.null}")
     @Column(nullable = false,unique = true)
     private String email;
-    @Size(min = 6,message = "Password must be at least 6 characters long")
+    @Size(min = 6,message = "{student.password.length}")
+    @NotNull(message = "{student.password.blank}")
+    @NotBlank(message = "{student.password.null}")
     @Column(nullable = false)
     private String password;
     @OneToOne(orphanRemoval = true,cascade = CascadeType.ALL)

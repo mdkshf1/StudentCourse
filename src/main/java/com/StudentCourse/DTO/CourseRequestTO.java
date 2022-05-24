@@ -10,17 +10,17 @@ import javax.validation.constraints.Size;
 
 @Data
 public class CourseRequestTO {
-    @Size(min = 5,max = 20,message = "Name of course should be minimum 5 characters and maximum 20 characters long")
-    @NotBlank(message = "Name of Course cannot be Blank")
-    @NotNull(message = "Name of Course cannot be Null")
+    @Size(min = 5,max = 20,message = "{course.name.size}")
+    @NotBlank(message = "{course.name.blank}")
+    @NotNull(message = "{course.name.null}")
     @Column(nullable = false)
     private String name;
-    @NotBlank(message = "Amount of Course cannot be Blank")
-    @NotNull(message = "Amount of Course cannot be Null")
+    @NotBlank(message = "{course.amount.blank}")
+    @NotNull(message = "{course.amount.null}")
     @Column(nullable = false)
     private String amount;
-    @NotBlank(message = "Description of Course cannot be Blank")
-    @NotNull(message = "Description of Course cannot be Null")
+    @NotBlank(message = "{course.description.blank}")
+    @NotNull(message = "{course.description.null}")
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
